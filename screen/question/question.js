@@ -20,6 +20,8 @@ const Question = () => {
   const [showResult, setResult] = useState(false);
   const [count, setCount] = useState(0);
 
+  //throw errors
+
   useEffect(() => {
     let timerId = null;
     if (count <= 30) {
