@@ -10,13 +10,15 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Button from "./button";
 import { formLogStyle, formFiledStyle, labelTextStyle } from "./styles";
 import common from "../../config/common";
 import Error from "./error-msg";
+import { fetchUser } from "./hook";
 
 const validtaionSchema = yup.object().shape({
   fullname: yup
@@ -31,21 +33,23 @@ const validtaionSchema = yup.object().shape({
   email: yup
     .string()
     .email("must be a valid email or phone number")
-    .matches(common.emailorphone.regex, { message: "must be a valid email or phone number" })
+    .matches(common.emailorphone.regex, {
+      message: "must be a valid email or phone number",
+    })
     .required("Please enter valid email or phone number"),
   password: yup
     .string()
-    .matches(common.password.regex, {
-      message:
-        "Must contain min 2 capital letters, 2 small letter, 2 numbers and 2 special characters",
+    .matches(common.aplhaNumeric, {
+      message: "Must conatain 5 char",
       excludeEmptyString: true,
     })
-    .min(8)
+    .min(5)
     .required("Password Required"),
 });
 
-const Signup = (props) => {
-  const { step, nextStep, saveButton, backStep, state } = props;
+const Signup = ({ navigation }) => {
+  const userData = fetchUser();
+  console.log("userData", userData);
 
   const {
     handleSubmit,
@@ -54,19 +58,24 @@ const Signup = (props) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validtaionSchema),
-    defaultValues: state?.user_info,
+    defaultValues: {},
   });
 
   /**form save data handler */
-  const saveData = () => {
-    let firstname = watch("firstname");
-    let lastname = watch("lastname");
-    let address = watch("address");
-    saveButton(step, {
-      firstname: firstname,
-      lastname: lastname,
-      address: address,
-    });
+  const signupHandler = (data) => {
+    let findUser = userData?.some((item) => item.email === data.email);
+
+    if (!findUser) {
+      // alert("Successful!");
+      let newObject = { ...data, score: null };
+      const jsonValue = JSON.stringify([...userData, newObject]);
+      AsyncStorage.setItem("users", jsonValue);
+      navigation.navigate("Questions", { user: data });
+    }
+
+    if (findUser) {
+      alert("Email id exist please login");
+    }
   };
 
   return (
@@ -145,13 +154,13 @@ const Signup = (props) => {
           )}
         </View>
         <Button
-          title={"save"}
-          onClickHandler={saveData}
+          title={"Sing up"}
+          onClickHandler={handleSubmit(signupHandler)}
           buttonStyle={{ marginBottom: 20 }}
         />
-         <View style={styles.signupContainer}>
-          <Text>Already have account?  </Text>
-          <TouchableOpacity>
+        <View style={styles.signupContainer}>
+          <Text>Already have account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.signup}>Login</Text>
           </TouchableOpacity>
         </View>
@@ -178,12 +187,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 0,
   },
-  signupContainer:{
-    flexDirection:"row",
-    alignSelf:'center',
-    marginBottom:10,
+  signupContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 10,
   },
-  signup:{
-    color:"#1E90FF"
-  }
+  signup: {
+    color: "#1E90FF",
+  },
 });

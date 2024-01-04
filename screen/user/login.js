@@ -1,7 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -11,52 +10,69 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Async,
 } from "react-native";
 
 import Button from "./button";
 import { formLogStyle, formFiledStyle, labelTextStyle } from "./styles";
 import common from "../../config/common.js";
 import Error from "./error-msg";
+import { fetchUser } from "./hook";
 
 const validtaionSchema = yup.object().shape({
   email: yup
     .string()
     .email("must be a valid email or phone number")
-    .matches(common.emailorphone.regex, { message: "must be a valid email or phone number" })
+    .matches(common.emailorphone.regex, {
+      message: "must be a valid email or phone number",
+    })
     .required("Please enter valid email or phone number"),
   password: yup
     .string()
-    .matches(common.password.regex, {
-      message:
-        "Must contain min 2 capital letters, 2 small letter, 2 numbers and 2 special characters",
+    .matches(common.aplhaNumeric, {
+      message: "Must containe 5 char",
       excludeEmptyString: true,
     })
-    .min(8)
+    .min(5)
     .required("Password Required"),
 });
 
-const ScreenOne = (props) => {
-  const { step, nextStep, saveButton, backStep, state } = props;
+const LoginForm = ({ navigation }) => {
+  const userData = fetchUser();
 
   const {
     handleSubmit,
     watch,
     control,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(validtaionSchema), defaultValues: state?.user_info });
+  } = useForm({ resolver: yupResolver(validtaionSchema), defaultValues: {} });
 
-  const saveData = () => {
-    let email = watch("email");
-    let password = watch("password");
-    saveButton(step, { email: email, password: password });
+  const loginHandler = (data) => {
+    let userInfo = {};
+    for (let i of userData) {
+      if (i.email === data.email) {
+        userInfo = i;
+      }
+    }
+
+    let findUser = data.email === userInfo.email;
+
+    if (!findUser) {
+      alert("user not found plz signup");
+    }
+
+    if (findUser) {
+      //alert('start quiz');
+      navigation.navigate("Questions", { user: userInfo });
+    }
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1, flexDirection: "row" }}
+      style={styles.keyboardAvoid}
     >
-      <ScrollView bounces={true} style={styles.scrollView}>
+      <ScrollView bounces={true} style={[styles.scrollView]}>
         <Text style={formLogStyle}>Login</Text>
         <View>
           <Text style={labelTextStyle}>Email</Text>
@@ -114,12 +130,12 @@ const ScreenOne = (props) => {
         </TouchableOpacity>
         <Button
           title={"Login"}
-          onClickHandler={saveData}
+          onClickHandler={handleSubmit(loginHandler)}
           buttonStyle={{ marginBottom: 20 }}
         />
         <View style={styles.signupContainer}>
-          <Text>Don't have account?  </Text>
-          <TouchableOpacity>
+          <Text>Don't have account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
             <Text style={styles.signup}>Sign up</Text>
           </TouchableOpacity>
         </View>
@@ -153,14 +169,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 10,
   },
-  signupContainer:{
-    flexDirection:"row",
-    alignSelf:'center',
-    marginBottom:10,
+  signupContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 10,
   },
-  signup:{
-    color:"#1E90FF"
-  }
+  signup: {
+    color: "#1E90FF",
+  },
+  keyboardAvoid: {
+    flex: 1,
+    flexDirection: "row",
+  },
 });
 
-export default ScreenOne;
+export default LoginForm;

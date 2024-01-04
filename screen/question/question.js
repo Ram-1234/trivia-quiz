@@ -6,12 +6,17 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Hook } from "./hook";
 import Loading from "../loader/loader";
 import Score from "../final-score/score";
+import { fetchUser } from "../user/hook";
 
-const Question = () => {
+const Question = ({route, navigation}) => {
+  const { user } = route.params;
+  const userData = fetchUser();
+
   const [loader, setLoader] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [questions, setQuestions] = useState([]);
@@ -32,6 +37,10 @@ const Question = () => {
     return () => clearTimeout(timerId);
   }, [currentQuestion, count]);
 
+  useEffect(()=>{
+    setCount(0);
+  },[currentQuestion])
+
   const selectOpetion = (selected) => {
     setSelectedAns(selected);
     let anser = selected === questions[currentQuestion]?.correct_answer;
@@ -47,6 +56,9 @@ const Question = () => {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setResult(true);
+      let newObject = {...user, score:score}
+      const jsonValue = JSON.stringify([...userData, newObject]);
+      AsyncStorage.setItem("users", jsonValue);
     }
 
     if (anser && count <= 30) {
@@ -61,6 +73,10 @@ const Question = () => {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setResult(true);
+      let newObject = {...user, score:score}
+      const jsonValue = JSON.stringify([...userData, newObject]);
+      AsyncStorage.setItem("users", jsonValue);
+      //navigation.navigate("Questions")
     }
   };
 

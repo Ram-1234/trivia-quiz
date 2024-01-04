@@ -1,16 +1,18 @@
 import React, { memo } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import { Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Score = ({ score, closeBoard }) => {
+  const navigation = useNavigation();
+
+  const closeButton = () => {
+    navigation.navigate("Trivia Quiz");
+    closeBoard();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={closeBoard} style={styles.closeContainer}>
+      <TouchableOpacity onPress={closeButton} style={styles.closeContainer}>
         <Text style={styles.close}>X</Text>
       </TouchableOpacity>
       <Text style={styles.title}>Final Score 🎉🎊</Text>
@@ -23,9 +25,9 @@ export default memo(Score);
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "orange",
-    height: "120%",
-    width: "100%",
+    height: "100%",
     justifyContent: "center",
   },
   title: {
@@ -42,8 +44,8 @@ const styles = StyleSheet.create({
   },
   closeContainer: {
     position: "absolute",
-    top: "10%",
-    right: 40,
+    top: "2%",
+    right: 20,
   },
   close: {
     color: "#fff",

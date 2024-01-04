@@ -31,10 +31,10 @@ export default ErrorBoundary;
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     alignSelf: "center",
-    justifyContent:'center',
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     color: "red",

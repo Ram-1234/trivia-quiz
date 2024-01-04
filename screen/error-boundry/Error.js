@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const Error = ({msg}) => {
+const Error = ({ msg }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.loading}>{msg||"Something went wrong!"}</Text>
+      <Text style={styles.loading}>{msg || "Something went wrong!"}</Text>
     </View>
   );
 };
