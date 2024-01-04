@@ -9,17 +9,28 @@ export const fetchUser = () => {
       try {
         const value = await AsyncStorage.getItem("users");
         if (value !== null) {
-          console.log("value", value);
           let jsonData = JSON.parse(value);
           setData(jsonData);
         }
       } catch (e) {
-        // error reading value
         console.warn(e);
       }
     };
     getData();
   }, []);
+
+  /**delete data lits**/
+  // useEffect(()=>{
+  //   const removeValue = async () => {
+  //     try {
+  //       await AsyncStorage.removeItem('users')
+  //     } catch(e) {
+  //       // remove error
+  //     }
+  //     console.log('Done.')
+  //   }
+  //   removeValue()
+  // },[])
 
   return data;
 };

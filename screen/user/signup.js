@@ -64,10 +64,11 @@ const Signup = ({ navigation }) => {
   /**form save data handler */
   const signupHandler = (data) => {
     let findUser = userData?.some((item) => item.email === data.email);
-
+    console.log('findUser', findUser);
+    
     if (!findUser) {
       // alert("Successful!");
-      let newObject = { ...data, score: null };
+      let newObject = { ...data, score: 0 };
       const jsonValue = JSON.stringify([...userData, newObject]);
       AsyncStorage.setItem("users", jsonValue);
       navigation.navigate("Questions", { user: data });

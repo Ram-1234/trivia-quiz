@@ -8,6 +8,7 @@ import Home from "./screen";
 import Question from "./screen/question/question";
 import LoginForm from "./screen/user/login";
 import Signup from "./screen/user/signup";
+import LBoard from "./screen/leader-board/leader-board";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -21,6 +22,7 @@ export default function App() {
             <Stack.Screen name="Login" component={LoginForm}></Stack.Screen>
             <Stack.Screen name="Signup" component={Signup}></Stack.Screen>
             <Stack.Screen name="Questions" component={Question}></Stack.Screen>
+            <Stack.Screen name="Leader Board" component={LBoard}></Stack.Screen>
           </Stack.Navigator>
         </SafeAreaView>
       </ErrorBoundary>

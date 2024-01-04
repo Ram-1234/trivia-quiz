@@ -13,7 +13,7 @@ export default {
         regex:/\S+@\S+\.\S+|^$/
     },
     emailorphone:{
-      regex:/^(?:\d{10}|\w+@\w+\.\w{2,3})$/
+      regex:/^[6-9][0-9]{9}|\S+@\S+\.\S+|^$/
     },
     address: {
       min: 8,

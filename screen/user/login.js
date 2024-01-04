@@ -55,15 +55,16 @@ const LoginForm = ({ navigation }) => {
       }
     }
 
-    let findUser = data.email === userInfo.email;
+    /*** email & password check */
+    let emailCheck = data.email === userInfo.email;
+    let passwordCheck = data.password === userInfo.password;
 
-    if (!findUser) {
+    if (!emailCheck) {
       alert("user not found plz signup");
-    }
-
-    if (findUser) {
-      //alert('start quiz');
+    } else if (emailCheck && passwordCheck) {
       navigation.navigate("Questions", { user: userInfo });
+    } else if (emailCheck && !passwordCheck) {
+      alert("Incorrect password");
     }
   };
 

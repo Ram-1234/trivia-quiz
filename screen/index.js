@@ -20,6 +20,12 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.subtitle}>Let's begin</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.leaderBoardContainer}
+        onPress={() => navigation.navigate("Leader Board")}
+      >
+        <Text style={styles.subtitle}>Leader Board</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -65,4 +71,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: "38%",
   },
+  leaderBoardContainer:{
+    position: "absolute",
+    bottom: "33%",
+    alignItems: "center",
+    justifyContent: "center",
+  }
 });

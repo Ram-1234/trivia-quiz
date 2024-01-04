@@ -6,14 +6,14 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Hook } from "./hook";
 import Loading from "../loader/loader";
 import Score from "../final-score/score";
 import { fetchUser } from "../user/hook";
 
-const Question = ({route, navigation}) => {
+const Question = ({ route, navigation }) => {
   const { user } = route.params;
   const userData = fetchUser();
 
@@ -25,8 +25,6 @@ const Question = ({route, navigation}) => {
   const [showResult, setResult] = useState(false);
   const [count, setCount] = useState(0);
 
-  //throw errors
-
   useEffect(() => {
     let timerId = null;
     if (count <= 30) {
@@ -37,49 +35,65 @@ const Question = ({route, navigation}) => {
     return () => clearTimeout(timerId);
   }, [currentQuestion, count]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setCount(0);
-  },[currentQuestion])
+  }, [currentQuestion]);
 
+  /** select option handler */
   const selectOpetion = (selected) => {
     setSelectedAns(selected);
-    let anser = selected === questions[currentQuestion]?.correct_answer;
-    if (!anser) {
-      alert("Currect Answer: " + questions[currentQuestion]?.correct_answer);
-    }
   };
 
+  /** update the asyncstorage */
+  const updateAsyncStorage = async (updateScore) => {
+    const jsonValue = JSON.stringify(updateScore);
+    await AsyncStorage.setItem("users", jsonValue);
+  };
+
+  /** update the userlist score  */
+  const userLitsScore = (userData, user) => {
+    return (
+      userData &&
+      userData.map((item) => {
+        if (item.email === user.email) {
+          return { ...item, score: score };
+        } else return item;
+      })
+    );
+  };
+
+  /** submit output handler */
   const onSubmit = () => {
     let anser = selectedAns === questions[currentQuestion]?.correct_answer;
 
     if (currentQuestion < questions?.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
+      let updateScore = userLitsScore(userData, user);
+      updateAsyncStorage(updateScore);
       setResult(true);
-      let newObject = {...user, score:score}
-      const jsonValue = JSON.stringify([...userData, newObject]);
-      AsyncStorage.setItem("users", jsonValue);
     }
 
     if (anser && count <= 30) {
       setScore((prev) => prev + 1);
-    } else {
-      // alert(questions[currentQuestion]?.correct_answer);
     }
+
+    setSelectedAns("");
   };
 
+  /** next question hanlder */
   const handleNext = () => {
     if (currentQuestion < questions?.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
+      let updateScore = userLitsScore(userData, user);
+      updateAsyncStorage(updateScore);
       setResult(true);
-      let newObject = {...user, score:score}
-      const jsonValue = JSON.stringify([...userData, newObject]);
-      AsyncStorage.setItem("users", jsonValue);
-      //navigation.navigate("Questions")
     }
+    setSelectedAns("");
   };
 
+  /** progress handler */
   const handleProgress = (currLength, total) => {
     let widthPrecent = parseInt(((currLength + 1) / total) * 100);
     return {
@@ -87,6 +101,7 @@ const Question = ({route, navigation}) => {
     };
   };
 
+  /** final score close handler  */
   const closeScoreBoard = () => {
     setResult(false);
   };
@@ -101,7 +116,7 @@ const Question = ({route, navigation}) => {
 
   return !showResult ? (
     <>
-      {!loader && (
+      {!loader && questions.length>0 && (
         <SafeAreaView style={styles.container}>
           <Text style={styles.timer}>
             {" "}
@@ -118,8 +133,8 @@ const Question = ({route, navigation}) => {
                   onPress={() => selectOpetion(item)}
                   style={[
                     styles.answerContainer,
-                    questions[currentQuestion]?.correct_answer ===
-                      selectedAns && item === selectedAns
+                    questions[currentQuestion]?.correct_answer === item &&
+                    selectedAns?.length > 0
                       ? { borderColor: "green" }
                       : item === selectedAns && { borderColor: "red" },
                   ]}
@@ -162,7 +177,6 @@ export default Question;
 const styles = StyleSheet.create({
   container: {
     minHeight: 420,
-    // borderWidth: 2,
   },
   question: {
     fontSize: 20,
@@ -171,7 +185,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 20,
     color: "red",
-    // borderWidth:2,
   },
   answerContainer: {
     borderColor: "grey",
