@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "trivia",
-    "slug": "trivia",
+    "name": "Trivia Quiz",
+    "slug": "trivia-quiz",
+    "description": "Awesome trivia quiz app.",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/new-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/homepage.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,16 +16,23 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "1.1.2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ramnayan_699.triviaquiz"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b1c85982-e4d4-45a9-97a5-e846cbd6f54c"
+      }
     }
   }
 }

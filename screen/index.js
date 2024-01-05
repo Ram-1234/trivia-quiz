@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Button,
+  Platform,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 10,
     backgroundColor: "#000000c0",
+    top: (Platform.OS === 'android')? "40%":"45%",
   },
   subtitleContainer: {
     position: "absolute",

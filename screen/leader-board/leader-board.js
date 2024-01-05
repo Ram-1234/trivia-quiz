@@ -14,7 +14,7 @@ userList = userList && userList.sort((a,b)=> b?.score - a?.score)
       renderItem={({item})=>{
         return(
             <View key ={item.email} style={styles.renderItemContainer}>
-                <Text style={styles.title}>{item.email}{", "}</Text> 
+                <Text style={styles.title}>{isNaN(item.email)? item.email : item.fullname}{", "}</Text> 
                 <Text style={styles.title}>{item?.score} 🎯</Text>
             </View>
         )

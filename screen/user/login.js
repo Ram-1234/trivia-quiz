@@ -22,7 +22,7 @@ import { fetchUser } from "./hook";
 const validtaionSchema = yup.object().shape({
   email: yup
     .string()
-    .email("must be a valid email or phone number")
+    // .email("must be a valid email or phone number")
     .matches(common.emailorphone.regex, {
       message: "must be a valid email or phone number",
     })
