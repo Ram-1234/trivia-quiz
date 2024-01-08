@@ -2,7 +2,6 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
   Platform,
   ImageBackground,
   StyleSheet,
@@ -25,7 +24,7 @@ const Home = ({ navigation }) => {
         style={styles.leaderBoardContainer}
         onPress={() => navigation.navigate("Leader Board")}
       >
-        <Text style={styles.subtitle}>Leader Board</Text>
+        <Text style={styles.leaderBoardTitle}>Leader Board</Text>
       </TouchableOpacity>
     </View>
   );
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
   },
   subtitleContainer: {
     position: "absolute",
-    // zIndex:10,
     bottom: "38%",
     alignItems: "center",
     justifyContent: "center",
@@ -67,7 +65,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "white",
     fontSize: 20,
-    lineHeight: 84,
+    lineHeight: 60,
     fontWeight: "bold",
     textAlign: "center",
     position: "absolute",
@@ -78,5 +76,13 @@ const styles = StyleSheet.create({
     bottom: "33%",
     alignItems: "center",
     justifyContent: "center",
+  },
+  leaderBoardTitle:{
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    position: "absolute",
+    bottom: "38%",
   }
 });

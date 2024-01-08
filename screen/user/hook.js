@@ -5,18 +5,17 @@ export const fetchUser = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("users");
-        if (value !== null) {
-          let jsonData = JSON.parse(value);
-          setData(jsonData);
+      (async()=>{
+        try {
+          const value = await AsyncStorage.getItem("users");
+          if (value !== null) {
+            let jsonData = await JSON.parse(value);
+            setData(jsonData);
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.warn(e);
-      }
-    };
-    getData();
+      })()
   }, []);
 
   /**delete data lits**/

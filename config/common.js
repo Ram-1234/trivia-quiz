@@ -1,3 +1,5 @@
+import { Platform } from "react-native"
+
 export default {
     alphabets: /^([A-Za-z\s])+$/,
     aplhaNumeric: /^[a-zA-Z0-9\s]+$/,
@@ -21,4 +23,4 @@ export default {
     },
   }
   
-  
+  export const DeviceOs = Platform.OS;

@@ -1,10 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { DeviceOs } from "../../config/common";
+import { dynamicStyle } from "../user/styles";
 
 const Loading = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.loading}>Loading...</Text>
+      <Text
+        style={[styles.loading, DeviceOs === "ios" ? dynamicStyle.f400 : null]}
+      >
+        Loading...
+      </Text>
     </View>
   );
 };
@@ -17,7 +23,6 @@ const styles = StyleSheet.create({
   },
   loading: {
     fontSize: 20,
-    fontWeight: 400,
     color: "grey",
   },
 });

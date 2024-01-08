@@ -18,3 +18,9 @@ export const labelTextStyle = {
   paddingLeft: 10,
   paddingTop: 10,
 };
+
+export const dynamicStyle={
+    f400:{fontWeight:400},
+    f500:{fontWeight:500},
+    f600:{fontWeight:600}
+}

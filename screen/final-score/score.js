@@ -1,6 +1,8 @@
 import React, { memo } from "react";
 import { Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { DeviceOs } from "../../config/common";
+import { dynamicStyle } from "../user/styles";
 
 const Score = ({ score, closeBoard }) => {
   const navigation = useNavigation();
@@ -13,10 +15,22 @@ const Score = ({ score, closeBoard }) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={closeButton} style={styles.closeContainer}>
-        <Text style={styles.close}>X</Text>
+        <Text
+          style={[styles.close, DeviceOs === "ios" ? dynamicStyle.f600 : null]}
+        >
+          X
+        </Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Final Score 🎉🎊</Text>
-      <Text style={styles.score}>{score}</Text>
+      <Text
+        style={[styles.title, DeviceOs === "ios" ? dynamicStyle.f600 : null]}
+      >
+        Final Score 🎉🎊
+      </Text>
+      <Text
+        style={[styles.score, DeviceOs === "ios" ? dynamicStyle.f600 : null]}
+      >
+        {score}
+      </Text>
     </SafeAreaView>
   );
 };
@@ -32,13 +46,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 600,
     alignSelf: "center",
     color: "#fff",
   },
   score: {
     fontSize: 30,
-    fontWeight: 600,
     alignSelf: "center",
     color: "#fff",
   },
@@ -50,7 +62,6 @@ const styles = StyleSheet.create({
   close: {
     color: "#fff",
     fontSize: 30,
-    fontWeight: 600,
     textAlign: "left",
     justifyContent: "flex-start",
   },

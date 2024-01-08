@@ -12,10 +12,13 @@ import { Hook } from "./hook";
 import Loading from "../loader/loader";
 import Score from "../final-score/score";
 import { fetchUser } from "../user/hook";
+import Progress from "./progress";
+import { DeviceOs } from "../../config/common";
+import { dynamicStyle } from "../user/styles";
 
 const Question = ({ route, navigation }) => {
   const { user } = route.params;
-  const userData = fetchUser();
+  const userData = fetchUser() || [];
 
   const [loader, setLoader] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -51,7 +54,7 @@ const Question = ({ route, navigation }) => {
   };
 
   /** update the userlist score  */
-  const userLitsScore = (userData, user) => {
+  const userLitsScore = (userData, user, score) => {
     return (
       userData &&
       userData.map((item) => {
@@ -63,21 +66,20 @@ const Question = ({ route, navigation }) => {
   };
 
   /** submit output handler */
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let anser = selectedAns === questions[currentQuestion]?.correct_answer;
-
-    if (currentQuestion < questions?.length - 1) {
-      setCurrentQuestion((prev) => prev + 1);
-    } else {
-      let updateScore = userLitsScore(userData, user);
-      updateAsyncStorage(updateScore);
-      setResult(true);
-    }
 
     if (anser && count <= 30) {
       setScore((prev) => prev + 1);
     }
 
+    if (currentQuestion < questions?.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+    } else if (currentQuestion === questions?.length - 1) {
+      let updateScore = await userLitsScore(userData, user, score);
+      updateAsyncStorage(updateScore);
+      setResult(true);
+    }
     setSelectedAns("");
   };
 
@@ -85,20 +87,12 @@ const Question = ({ route, navigation }) => {
   const handleNext = () => {
     if (currentQuestion < questions?.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
-    } else {
-      let updateScore = userLitsScore(userData, user);
+    } else if (currentQuestion === questions?.length - 1) {
+      let updateScore = userLitsScore(userData, user, score);
       updateAsyncStorage(updateScore);
       setResult(true);
     }
     setSelectedAns("");
-  };
-
-  /** progress handler */
-  const handleProgress = (currLength, total) => {
-    let widthPrecent = parseInt(((currLength + 1) / total) * 100);
-    return {
-      width: `${widthPrecent}%`,
-    };
   };
 
   /** final score close handler  */
@@ -116,13 +110,23 @@ const Question = ({ route, navigation }) => {
 
   return !showResult ? (
     <>
-      {!loader && questions.length>0 && (
+      {!loader && questions.length > 0 && (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.timer}>
+          <Text
+            style={[
+              styles.timer,
+              DeviceOs === "ios" ? dynamicStyle.f400 : null,
+            ]}
+          >
             {" "}
             00 : {count} {count > 30 && "Time out!"}
           </Text>
-          <Text style={styles.question}>
+          <Text
+            style={[
+              styles.question,
+              DeviceOs === "ios" ? dynamicStyle.f600 : null,
+            ]}
+          >
             {questions[currentQuestion]?.question}
           </Text>
           {answer &&
@@ -139,13 +143,27 @@ const Question = ({ route, navigation }) => {
                       : item === selectedAns && { borderColor: "red" },
                   ]}
                 >
-                  <Text style={styles.answerText}>{item}</Text>
+                  <Text
+                    style={[
+                      styles.answerText,
+                      DeviceOs === "ios" ? dynamicStyle.f400 : null,
+                    ]}
+                  >
+                    {item}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
           <View style={styles.buttonBox}>
             <TouchableOpacity onPress={onSubmit} style={styles.submitContainer}>
-              <Text style={styles.submitButton}>Submit</Text>
+              <Text
+                style={[
+                  styles.submitButton,
+                  DeviceOs === "ios" ? dynamicStyle.f500 : null,
+                ]}
+              >
+                Submit
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleNext}
@@ -154,17 +172,19 @@ const Question = ({ route, navigation }) => {
               <Text style={styles.submitButton}>Next</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.score}>{score} 🎯</Text>
-          <View style={[styles.progressContainer]}>
-            <Text
-              style={[
-                styles.progress,
-                handleProgress(currentQuestion, questions?.length),
-              ]}
-            ></Text>
-          </View>
+          <Text
+            style={[
+              styles.score,
+              DeviceOs === "ios" ? dynamicStyle.f600 : null,
+            ]}
+          >
+            {score} 🎯
+          </Text>
+          {/* progress component */}
+          {<Progress currentQuestion={currentQuestion} questions={questions} />}
         </SafeAreaView>
       )}
+      {/* loading component */}
       {loader && <Loading />}
     </>
   ) : (
@@ -180,7 +200,6 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: 20,
-    fontWeight: "600",
     color: "#000",
     padding: 10,
     marginHorizontal: 20,
@@ -197,7 +216,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 8,
     fontSize: 18,
-    fontWeight: 400,
   },
   buttonBox: {
     flexDirection: "row",
@@ -219,7 +237,6 @@ const styles = StyleSheet.create({
     minWidth: 150,
     fontSize: 16,
     textAlign: "center",
-    fontWeight: 500,
   },
   progressContainer: {
     backgroundColor: "lightgrey",
@@ -240,14 +257,12 @@ const styles = StyleSheet.create({
     color: "#000",
     textAlign: "center",
     fontSize: 35,
-    fontWeight: 600,
     position: "absolute",
     bottom: "-30%",
     left: "50%",
   },
   timer: {
     fontSize: 20,
-    fontWeight: 400,
     color: "#000",
     textAlign: "center",
   },
