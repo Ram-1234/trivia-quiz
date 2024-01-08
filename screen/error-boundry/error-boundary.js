@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, StyleSheet, SafeAreaView } from "react-native";
 
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.text}>{this.props?.fallback}</Text>
+          <Text style={[styles.text, DeviceOs === "ios" ? dynamicStyle.f400 : null]}>{this.props?.fallback}</Text>
         </SafeAreaView>
       );
     }
@@ -41,6 +42,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textTransform: "lowercase",
     fontSize: 20,
-    fontWeight: 400,
   },
 });

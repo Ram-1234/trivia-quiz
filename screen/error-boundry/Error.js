@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { DeviceOs } from "../../config/common";
+import { dynamicStyle } from "../user/styles";
 
 const Error = ({ msg }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.loading}>{msg || "Something went wrong!"}</Text>
+      <Text style={[styles.loading, DeviceOs === "ios" ? dynamicStyle.f400 : null]}>{msg || "Something went wrong!"}</Text>
     </View>
   );
 };
@@ -17,7 +19,6 @@ const styles = StyleSheet.create({
   },
   loading: {
     fontSize: 20,
-    fontWeight: 400,
     color: "red",
   },
 });
