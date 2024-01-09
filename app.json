@@ -3,7 +3,7 @@
     "name": "Trivia Quiz",
     "slug": "trivia-quiz",
     "description": "Awesome trivia quiz app.",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "1.2.5"
+      "bundleIdentifier": "1.2.6"
     },
     "android": {
       "adaptiveIcon": {
