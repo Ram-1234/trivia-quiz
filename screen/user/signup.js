@@ -49,8 +49,7 @@ const validtaionSchema = yup.object().shape({
 
 const Signup = ({ navigation }) => {
   const userData = fetchUser();
-  console.log("userData", userData);
-
+  
   const {
     handleSubmit,
     watch,
